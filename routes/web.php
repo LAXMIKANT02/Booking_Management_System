@@ -18,9 +18,9 @@ Route::get('page/{name}',[WebpageController::class,'viewPage'])->name('webpage.d
 
 Route::get('login',[AuthController::class,'login'])->name('login');
 Route::post('login',[AuthController::class,'authenticate'])->name('login.authenticate');
-
 Route::get('signup',[AuthController::class,'signup'])->name('signup');
 Route::post('signup',[AuthController::class,'createUser'])->name('signup.create');
+Route::get('logout',[AuthController::class,'logout'])->name('logout');
 
 Route::middleware(['auth'])->group(function () {
     Route::get('dashboard/admin',[UserController::class,'adminDashboard'])->name('dashboard.admin');
