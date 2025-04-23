@@ -41,7 +41,7 @@
                             <input type="password" class="form-control" id="confirmpassword" name="confirmpassword" placeholder="Renter Password">
                         </div>
                         <div class="mb-3">                           
-                            <button type="submit" class="btn btn-primary mb-3" >Login</button>
+                            <button type="submit" class="btn btn-primary mb-3" >SignUp</button>
                             
                         </div>
                         <div class="mb-3">                           

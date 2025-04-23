@@ -36,7 +36,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('booking/delete/{id}',[BookingController::class,'delete'])->name('booking.delete');
 
 
-    Route::get('webpage',[WebpageController::class,'index'])->name('webpage.my');
+    Route::get('webpage',[WebpageController::class,'index'])->name('webpage.index');
     Route::get('webpage/add',[WebpageController::class,'add'])->name('webpage.add');
     Route::post('webpage/save',[WebpageController::class,'save'])->name('webpage.save');
     Route::get('webpage/{id}',[WebpageController::class,'getWebPageById'])->name('webpage.edit');
@@ -45,7 +45,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('webpage/delete/{id}',[WebpageController::class,'delete'])->name('webpage.delete');
 
 
-    Route::get('user',[UserController::class,'index'])->name('user.my');
+    Route::get('user',[UserController::class,'index'])->name('user');
     Route::get('user/add',[UserController::class,'add'])->name('user.add');
     Route::post('user/save',[UserController::class,'save'])->name('user.save');
     Route::get('user/{id}',[UserController::class,'getUserById'])->name('user.edit');

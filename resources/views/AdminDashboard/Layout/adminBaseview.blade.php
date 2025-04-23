@@ -1,4 +1,4 @@
-@extends('layout.baseview')
+@extends('AdminDashboard.Layout.adminBaseView')
 @section('title','Login')
 @section('style')
 <style>

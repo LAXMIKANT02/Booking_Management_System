@@ -9,7 +9,7 @@ class WebpageController extends Controller
 {
     public function index()
     {
-        $pages = Webpage::all();
+        $pages = Webpage::paginate(50);
         return view('webpage.index',compact('pages'));
     
     }
@@ -41,7 +41,7 @@ class WebpageController extends Controller
 
     public function landing()
     {
-        $pages = Webpage::all();
+        $pages = Webpage::limit(100)->get();
         return view('index', compact('pages'));
       
     }
@@ -49,6 +49,7 @@ class WebpageController extends Controller
     public function viewPage($page)
     {
         $data = Webpage::where('slug', $page)->first();
+        $pages = Webpage::limit(100)->get(); 
         return view('dynamic', compact('data', 'pages'));
         
     }

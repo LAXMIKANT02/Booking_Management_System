@@ -39,8 +39,10 @@
                         <a href="#" class="navbar-brand d-none d-md-block">
                            <img src="{{asset('assets/images/logo.png')}}"  alt="Brand Logo">
                        </a>
-                       @foreach($pages as $page)
-                       <a href="{{url('page/'.$page->slug)}}" class="nav-item nav-link text-black">{{$page->name}}</a>                       
+                       @foreach($pages ?? [] as $page)
+                       @if(is_object($page))
+                       <a href="{{url('page/'.$page->slug)}}" class="nav-item nav-link text-black">{{$page->name}}</a>
+                       @endif
                       
                        @endforeach
                     </div>
