@@ -3,12 +3,15 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Webpage;
 
 class WebpageController extends Controller
 {
     public function index()
     {
-        return view('webpage.index');
+        $pages = Webpage::all();
+        return view('webpage.index',compact('pages'));
+    
     }
 
     public function add($id)
@@ -36,13 +39,17 @@ class WebpageController extends Controller
         return redirect()->route('webpage.index');
     }
 
-    public function landing($id)
+    public function landing()
     {
-        return view('webpage.show', ['id' => $id]);
+        $pages = Webpage::all();
+        return view('index', compact('pages'));
+      
     }
 
     public function viewPage($page)
     {
-        return view('webpage.show', ['page' => $page]);
+        $data = Webpage::where('slug', $page)->first();
+        return view('dynamic', compact('data', 'pages'));
+        
     }
 }
