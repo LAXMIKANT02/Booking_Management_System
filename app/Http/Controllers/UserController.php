@@ -3,82 +3,143 @@
 namespace App\Http\Controllers;
 
 use App\Models\Bookings;
-use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\WebPage;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
+    // Display the user dashboard for admin and regular users
     public function index()
     {
-        return view('user.index');
+        return view('userDashboard.index');
     }
 
-    public function add($id)
+    // Add a new user - display form
+    public function add()
     {
-        return view('user.show', ['id' => $id]);
+        return view('userDashboard.index');
     }
 
-
+    // Save the new user
     public function save(Request $request)
     {
-  
-        return redirect()->route('user.index');
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email',
+            'password' => 'required|string|min:8|confirmed',
+        ]);
+
+        User::create([
+            'name' => $request->input('name'),
+            'email' => $request->input('email'),
+            'password' => Hash::make($request->input('password')),
+            'user_type' => $request->input('user_type', 2),
+        ]);
+
+        return redirect()->route('user');
     }
 
+    // Edit an existing user - display form
     public function edit($id)
     {
-        return view('user.edit', ['id' => $id]);
+        $user = User::findOrFail($id);
+        return view('userDashboard.index', ['user' => $user]);
     }
 
+    // Update user information
     public function update(Request $request, $id)
     {
-      
-        return redirect()->route('user.index');
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email,' . $id,
+            'password' => 'nullable|string|min:8|confirmed',
+        ]);
+
+        $user = User::findOrFail($id);
+        $user->name = $request->input('name');
+        $user->email = $request->input('email');
+        if ($request->filled('password')) {
+            $user->password = Hash::make($request->input('password'));
+        }
+        $user->save();
+
+        return redirect()->route('user');
     }
 
+    // View user before deletion (confirmation page)
     public function viewDelete($id)
     {
-        return view('user.show', ['id' => $id]);
+        $user = User::findOrFail($id);
+        return view('userDashboard.bookings.delete', ['user' => $user]);
     }
 
+    // Delete a user
     public function delete($id)
     {
-      
-        return redirect()->route('user.index');
-    }
-    public function getProfile($id)
-    {
-        return view('user.show', ['id' => $id]);
-    }
-    public function saveProfile($id)
-    {
-        return view('user.show', ['id' => $id]);
+        $user = User::findOrFail($id);
+        $user->delete();
+
+        return redirect()->route('user');
     }
 
+    // View user profile (for the logged-in user or admin)
+    public function getProfile()
+    {
+        $user = auth()->user(); // Get the currently authenticated user
+        return view('userDashboard.profile.index', ['user' => $user]);
+    }
 
+    // Save user profile changes
+    public function saveProfile(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email,' . auth()->id(),
+            'password' => 'nullable|string|min:8|confirmed',
+        ]);
+
+        $user = auth()->user(); // Get the currently authenticated user
+        $user->name = $request->input('name');
+        $user->email = $request->input('email');
+        if ($request->filled('password')) {
+            $user->password = Hash::make($request->input('password'));
+        }
+        $user->save();
+
+        return redirect()->route('user.profile.get');
+    }
+
+    // Admin Dashboard - Display admin statistics
     public function adminDashboard()
     {
-        $data['totalUsers'] = 0;
-        $data['adminUsers'] = 0;
-        $data['clientUsers'] = 0;
-        $data['totalBookings'] = 0;
-        $data['completedBookings'] = 0;
-        $data['totalWebpages'] = 0;
-        $data['activeWebpages'] = 0;
-        $data['totalUsers'] = User::count();
-        $data['adminUsers'] = user::where('user_type', 1)->count();
-        $data['clientUsers'] = user::where('user_type', 2)->count();
-        $data['totalBookings'] = Bookings::count();
-        $data['completedBookings'] = Bookings::where('booking_status', '3')->count();
-        $data['totalWebpages'] = WebPage::count();
-        $data['activeWebpages'] = WebPage::where('status', '1')->count();
+        $data = [
+            'totalUsers' => User::count(),
+            'adminUsers' => User::where('user_type', 1)->count(),
+            'clientUsers' => User::where('user_type', 2)->count(),
+            'totalBookings' => Bookings::count(),
+            'completedBookings' => Bookings::where('booking_status', '3')->count(),
+            'totalWebpages' => WebPage::count(),
+            'activeWebpages' => WebPage::where('status', '1')->count(),
+        ];
 
         $pages = WebPage::select('name', 'slug')->take(50)->get();
-        return view('AdminDashboard.index',['data' => $data, 'pages' => $pages]);
+
+        return view('adminDashboard.index', ['data' => $data, 'pages' => $pages]);
     }
-    public function userDashboard($id)
+
+    // User Dashboard - Display bookings for the logged-in user
+    public function userDashboard()
     {
-        return view('user.dashboard', ['id' => $id]);
+        $user = auth()->user(); // Get the authenticated user
+
+        // Fetch bookings related to the user
+        $data = [
+            'totalBookings' => Bookings::where('user_id', $user->id)->count(),
+            'completedBookings' => Bookings::where('user_id', $user->id)->where('booking_status', '3')->count(),
+        ];
+
+        return view('userDashboard.layout.userBaseview', ['data' => $data]);
     }
 }

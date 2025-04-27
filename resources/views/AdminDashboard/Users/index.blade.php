@@ -1,4 +1,4 @@
-@extends('AdminDashboard.Layout.adminBaseView')
+@extends('AdminDashboard.Layout.adminBaseview')
 @section('dashContent')
     <div class="container">
         <a href="{{route('user.add')}}" class="btn btn-primary mb-2 float-end">Create New User</a>

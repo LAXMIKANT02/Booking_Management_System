@@ -1,4 +1,4 @@
-@extends('AdminDashboard.Layout.adminBaseView')
+@extends('AdminDashboard.Layout.adminBaseview')
 @section('dashContent')
 <form action="{{Request::segment(2)=='add'?route('webpage.save'):route('webpage.update',['id'=>Request::segment(2)])}}" method="POST">
   @csrf

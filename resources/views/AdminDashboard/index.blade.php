@@ -1,4 +1,4 @@
-@extends('AdminDashboard.Layout.adminBaseView')
+@extends('AdminDashboard.Layout.adminBaseview')
 <style>
     .icon {  
   float: right;

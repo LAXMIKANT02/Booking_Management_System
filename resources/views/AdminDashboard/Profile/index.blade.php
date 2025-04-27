@@ -1,5 +1,5 @@
 
-@extends('AdminDashboard.Layout.adminBaseView')
+@extends('AdminDashboard.Layout.adminBaseview')
 @section('dashContent')
 <form action="{{route('user.profile.save')}}" method="POST">
   @csrf

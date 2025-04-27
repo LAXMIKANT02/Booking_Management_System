@@ -211,7 +211,8 @@
             <div class="row">
                 <div class="col-md-6">
                     <div class="container m-5">
-                        <img src="assets/logo.png" height="30px" class="bg-white">
+                    <img src="{{ asset('assets/images/logo.png') }}" height="30px" class="bg-white">
+
                         <div>
                             <p class="text-white">Lorem ipsum dolor sit amet consectetur adipisicing elit. Obcaecati nulla maxime, at culpa ipsa aliquam exercitationem deserunt odit incidunt a neque voluptas suscipit maiores quae dolor dolore tenetur corrupti dolorem!</p>
                         </div>

@@ -1,4 +1,4 @@
-@extends('UserDashboard.Layout.userBaseView')
+@extends('UserDashboard.Layout.userBaseview')
 <style>
     .icon {  
   float: right;

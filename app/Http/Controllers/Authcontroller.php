@@ -31,7 +31,7 @@ class Authcontroller extends Controller
         ))) {
            if (Auth::user()->user_type == 1) {
                 return redirect()->route('dashboard.admin');
-            } elseif (Auth::user()->user_type == 2) {
+            } else if(Auth::user()->user_type == 2) {
                 return redirect()->route('dashboard.user');
             } else {
                 return redirect()->route('login')->with('error', 'Invalid User credentials');  
@@ -45,7 +45,7 @@ class Authcontroller extends Controller
             'email' => 'required|email|unique:users',
             'phone_no' => 'required|unique:users',
             'password' => 'required|confirmed',
-            'confirm_password' => 'required'
+            'password_confirmation' => 'required'
         ]);
        $user = new User(
             [

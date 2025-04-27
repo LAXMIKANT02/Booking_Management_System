@@ -1,7 +1,7 @@
-@extends('AdminDashboard.Layout.adminBaseView')
+@extends('AdminDashboard.Layout.adminBaseview')
 @section('dashContent')
     <div class="container">
-        <a href="{{route('booking.add')}}" class="btn btn-primary mb-2 float-end">Create New Booking</a>
+        <a href="{{route('bookings.add')}}" class="btn btn-primary mb-2 float-end">Create New Booking</a>
         <table class="table table-light table-striped table-hover">
             <thead>
               <tr>
@@ -23,8 +23,8 @@
                     <td><div class="dropdown">
                         <span class="bi bi-list"></span>
                         <div class="dropdown-content">
-                            <a href="{{route('booking.edit',['id'=>$booking->id])}}"><i class="bi bi-pencil-square"></i> Edit</a>                     
-                            <a href="{{route('booking.view.delete',['id'=>$booking->id])}}"><i class="bi bi-trash"></i> Delete</a>
+                            <a href="{{route('bookings.edit',['id'=>$booking->id])}}"><i class="bi bi-pencil-square"></i> Edit</a>                     
+                            <a href="{{route('bookings.view.delete',['id'=>$booking->id])}}"><i class="bi bi-trash"></i> Delete</a>
                         </div>
                     </div>
                     </td>
