@@ -3,47 +3,38 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Bookings; 
-use App\Models\User; 
+use App\Models\Bookings;
+use App\Models\User;
 
 class BookingController extends Controller
 {
     public function index()
     {
-        // Fetch bookings with user data for admin
-        $query = Bookings::select('Bookings.*', 'users.name as user_name', 'users.email as user_email');
+        $query = Bookings::select('bookings.*', 'users.name as user_name', 'users.email as user_email');
         $query->leftJoin('users', 'bookings.user_id', '=', 'users.id');
         $data = $query->get();
 
-        // Check if the authenticated user is an admin or not
-        if(auth()->user()->user_type == 1) {
-            // Return admin view
+        if (auth()->user()->user_type == 1) {
             return view('adminDashboard.bookings.index', ['bookings' => $data]);
         } else {
-            // Return user view
             return view('userDashboard.bookings.index', ['bookings' => $data]);
         }
     }
 
     public function userBookings()
     {
-        // Fetch all bookings for the authenticated user
         $bookings = Bookings::where('user_id', auth()->id())->get();
-        
-        // Return the correct view for user bookings
         return view('userDashboard.bookings.index', compact('bookings'));
     }
 
     public function add()
     {
-        // Fetch users for the admin to assign to bookings
-        $data = User::paginate(10); // Pagination added
+        $data = User::paginate(10);
         return view('adminDashboard.bookings.addEdit', ['data' => $data]);
     }
 
     public function save(Request $request)
     {
-        // Validate input fields
         $request->validate([
             'user_id' => 'required|exists:users,id',
             'booking_date' => 'required|date',
@@ -57,7 +48,6 @@ class BookingController extends Controller
             'status.in' => 'Invalid status value.'
         ]);
 
-        // Save the booking
         $booking = new Bookings();
         $booking->user_id = $request->input('user_id');
         $booking->booking_date = $request->input('booking_date');
@@ -65,23 +55,20 @@ class BookingController extends Controller
         $booking->status = $request->input('status');
         $booking->save();
 
-        // Redirect back to the booking index
         return redirect()->route('bookings.index')->with('success', 'Booking created successfully.');
     }
 
     public function getBookingById($id)
     {
-        // Fetch the booking by ID
-        $booking = Bookings::find($id); // Fetch the booking by ID
+        $booking = Bookings::find($id);
         if (!$booking) {
             return redirect()->route('bookings.index')->with('error', 'Booking not found.');
         }
-        return view('adminDashboard.bookings.addEdit', ['booking' => $booking]); // Pass the booking data to the view
+        return view('adminDashboard.bookings.addEdit', ['booking' => $booking]);
     }
 
     public function updateBookingById(Request $request, $id)
     {
-        // Validate input fields
         $request->validate([
             'user_id' => 'required|exists:users,id',
             'booking_date' => 'required|date',
@@ -89,36 +76,31 @@ class BookingController extends Controller
             'status' => 'required|in:pending,confirmed,cancelled'
         ]);
 
-        // Find the booking
         $booking = Bookings::find($id);
         if (!$booking) {
             return redirect()->route('bookings.index')->with('error', 'Booking not found.');
         }
 
-        // Update booking details
         $booking->user_id = $request->input('user_id');
         $booking->booking_date = $request->input('booking_date');
         $booking->booking_time = $request->input('booking_time');
         $booking->status = $request->input('status');
         $booking->save();
 
-        // Redirect back to the booking index
         return redirect()->route('bookings.index')->with('success', 'Booking updated successfully.');
     }
 
     public function viewDelete($id)
     {
-        // Fetch the booking by ID
         $booking = Bookings::find($id);
         if (!$booking) {
             return redirect()->route('bookings.index')->with('error', 'Booking not found.');
         }
-        return view('bookings.show', ['booking' => $booking]); // Pass the booking data to the view
+        return view('bookings.show', ['booking' => $booking]);
     }
 
     public function delete($id)
     {
-        // Find and delete the booking
         $booking = Bookings::find($id);
         if (!$booking) {
             return redirect()->route('bookings.index')->with('error', 'Booking not found.');
@@ -127,5 +109,26 @@ class BookingController extends Controller
         $booking->delete();
         return redirect()->route('bookings.index')->with('success', 'Booking deleted successfully.');
     }
-    
+
+    // ✨ New function for frontend "Book Now" form:
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|max:255',
+            'subject' => 'required|string|max:255',
+            'message' => 'required|string',
+        ]);
+
+        // Save the booking (you can create a special table later if you want)
+        $booking = new Bookings();
+        $booking->name = $validated['customer_name'];
+        $booking->email = $validated['email'];
+        $booking->subject = $validated['subject'];
+        $booking->message = $validated['message'];
+        $booking->booking_datetime = now(); 
+        $booking->status = 'booking_status'; // default new booking status
+        $booking->save();
+        return redirect()->route('bookings.my')->with('success', 'Your booking request has been submitted successfully.');
+    }
 }

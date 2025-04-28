@@ -4,32 +4,41 @@ namespace App\Console\Commands;
 
 use App\Models\User;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Hash;
 
 class InstallAdmin extends Command
 {
+    /**
+     * The name and signature of the console command.
+     *
+     * @var string
+     */
     protected $signature = 'install:admin';
+
+    /**
+     * The console command description.
+     *
+     * @var string
+     */
     protected $description = 'Install System Admin';
 
+    /**
+     * Execute the console command.
+     */
     public function handle()
     {
-        $user = User::where('email', 'sys@example.com')->first();
-
-        if (!$user) {
-            $user = User::create([
-                'name' => 'System Admin',
-                'email' => 'sys@example.com',
-                'password' => Hash::make('password'), // hashed password
-                'user_type' => 1,
-            ]);
-
-            if ($user) {
-                $this->info('System Admin created successfully.');
-            } else {
-                $this->error('Failed to create System Admin.');
-            }
+        $user = new User([
+            'name' => 'System Admin',
+            'email' => 'admin@gmail.com',
+            'phone_no' => '1234567890',
+            'password' => bcrypt('admin123'),
+            'user_type' => 1,
+        ]);
+        if (User::where('email', 'admin@gmail.com')->exists()) {
+            $this->error('System Admin already exists.');
+        } elseif ($user->save()) {
+            $this->info('System Admin created successfully.');
         } else {
-            $this->info('System Admin already exists.');
+            $this->error('Failed to create System Admin.');
         }
     }
 }

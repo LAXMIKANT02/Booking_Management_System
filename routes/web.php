@@ -6,6 +6,7 @@ use App\Http\Controllers\BookingController; // Ensure this class exists in the s
 use App\Http\Controllers\WebpageController;
 use Illuminate\Support\Facades\Route;
 
+Route::post('/book-now', [BookingController::class, 'store'])->name('book.now');
 // Webpage Routes
 Route::get('/', [WebpageController::class, 'landing'])->name('webpage.landing');
 Route::get('page/{name}', [WebpageController::class, 'viewPage'])->name('webpage.dynamic');
