@@ -9,12 +9,12 @@ class WebpageController extends Controller
     public function index()
     {
         $pages = Webpage::paginate(50);
-        return view('admindashboard.webpage.index', compact('pages'));
+        return view('adminDashboard.webpage.index', compact( 'pages'));
     }
 
     public function add($id)
     {
-        return view('admindashboard.webpage.show', ['id' => $id]);
+        return view('adminDashboard.webpage.show', ['id' => $id]);
     }
 
     public function save(Request $request)
@@ -24,7 +24,7 @@ class WebpageController extends Controller
 
     public function edit($id)
     {
-        return view('admindashboard.webpage.edit', ['id' => $id]);
+        return view('adminDashboard.webpage.edit', ['id' => $id]);
     }
 
     public function update(Request $request, $id)
@@ -34,7 +34,7 @@ class WebpageController extends Controller
 
     public function viewDelete($id)
     {
-        return view('admindashboard.webpage.show', ['id' => $id]);
+        return view('adminDashboard.webpage.show', ['id' => $id]);
     }
 
     public function delete($id)
@@ -51,6 +51,6 @@ class WebpageController extends Controller
     {
         $data = Webpage::where('slug', $page)->first();
         $pages = Webpage::limit(100)->get(); 
-        return view('admindashboard.dynamic', ['data' => $data, 'pages' => $pages]);
+        return view('adminDashboard.dynamic', ['data' => $data, 'pages' => $pages]);
     }
 }

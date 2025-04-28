@@ -11,17 +11,17 @@ class BookingController extends Controller
     public function index()
     {
         // Fetch bookings with user data for admin
-        $query = Bookings::select('bookings.*', 'users.name as user_name', 'users.email as user_email');
+        $query = Bookings::select('Bookings.*', 'users.name as user_name', 'users.email as user_email');
         $query->leftJoin('users', 'bookings.user_id', '=', 'users.id');
         $data = $query->get();
 
         // Check if the authenticated user is an admin or not
         if(auth()->user()->user_type == 1) {
             // Return admin view
-            return view('admindashboard.bookings.index', ['bookings' => $data]);
+            return view('adminDashboard.bookings.index', ['bookings' => $data]);
         } else {
             // Return user view
-            return view('userdashboard.bookings.index', ['bookings' => $data]);
+            return view('userDashboard.bookings.index', ['bookings' => $data]);
         }
     }
 
@@ -31,14 +31,14 @@ class BookingController extends Controller
         $bookings = Bookings::where('user_id', auth()->id())->get();
         
         // Return the correct view for user bookings
-        return view('userdashboard.bookings.index', compact('bookings'));
+        return view('userDashboard.bookings.index', compact('bookings'));
     }
 
     public function add()
     {
         // Fetch users for the admin to assign to bookings
         $data = User::paginate(10); // Pagination added
-        return view('admindashboard.bookings.addEdit', ['data' => $data]);
+        return view('adminDashboard.bookings.addEdit', ['data' => $data]);
     }
 
     public function save(Request $request)
@@ -76,7 +76,7 @@ class BookingController extends Controller
         if (!$booking) {
             return redirect()->route('bookings.index')->with('error', 'Booking not found.');
         }
-        return view('admindashboard.bookings.addEdit', ['booking' => $booking]); // Pass the booking data to the view
+        return view('adminDashboard.bookings.addEdit', ['booking' => $booking]); // Pass the booking data to the view
     }
 
     public function updateBookingById(Request $request, $id)

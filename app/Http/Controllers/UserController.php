@@ -140,6 +140,6 @@ class UserController extends Controller
             'completedBookings' => Bookings::where('user_id', $user->id)->where('booking_status', '3')->count(),
         ];
 
-        return view('userDashboard.layout.userBaseview', ['data' => $data]);
+        return view('userDashboard.index', ['data' => $data]);
     }
 }

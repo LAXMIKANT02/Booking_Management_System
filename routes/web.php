@@ -7,7 +7,7 @@ use App\Http\Controllers\WebpageController;
 use Illuminate\Support\Facades\Route;
 
 // Webpage Routes
-Route::get('/', [WebpageController::class, 'landing'])->name('webpage.view');
+Route::get('/', [WebpageController::class, 'landing'])->name('webpage.landing');
 Route::get('page/{name}', [WebpageController::class, 'viewPage'])->name('webpage.dynamic');
 
 // Authentication Routes
@@ -19,31 +19,20 @@ Route::get('logout', [AuthController::class, 'logout'])->name('logout');
 
 // Routes requiring authentication
 Route::middleware(['auth'])->group(function () {
+  Route::middleware(['auth', 'admin'])->get('dashboard/admin', [UserController::class, 'adminDashboard'])->name('dashboard.admin');
 
-    // Dashboards
-    Route::get('dashboard/admin', [UserController::class, 'adminDashboard'])->name('dashboard.admin');
-    
     // Removed {id} from dashboard/user route
     Route::get('dashboard/user', [UserController::class, 'userDashboard'])->name('dashboard.user'); 
 
-    // Bookings Routes
     Route::get('bookings/my', [BookingController::class, 'userBookings'])->name('bookings.my');
-    Route::get('bookings/add', [BookingController::class, 'add'])->name('bookings.add');
-    Route::post('bookings/save', [BookingController::class, 'save'])->name('bookings.save');
-    Route::get('bookings/all', [BookingController::class, 'allBookings'])->name('bookings.all');
-    Route::get('bookings/{id}', [BookingController::class, 'getBookingById'])->name('bookings.edit');
-    Route::post('bookings/update/{id}', [BookingController::class, 'updateBookingById'])->name('bookings.update');
-    Route::get('bookings/view/{id}', [BookingController::class, 'viewBooking'])->name('bookings.view');
-    Route::delete('bookings/delete/{id}', [BookingController::class, 'delete'])->name('bookings.delete');
+Route::get('bookings/add', [BookingController::class, 'add'])->name('bookings.add');
+Route::post('bookings/save', [BookingController::class, 'save'])->name('bookings.save');
+Route::get('bookings/all', [BookingController::class, 'index'])->name('bookings.all');
+Route::get('bookings/{id}', [BookingController::class, 'getBookingById'])->name('bookings.edit');
+Route::post('bookings/update/{id}', [BookingController::class, 'updateBookingById'])->name('bookings.update');
+Route::get('bookings/view/{id}', [BookingController::class, 'viewBooking'])->name('bookings.view');
+Route::delete('bookings/delete/{id}', [BookingController::class, 'delete'])->name('bookings.delete');
 
-      // You already have other routes here
-      Route::get('bookings', [BookingController::class, 'index'])->name('bookings.index');
-      Route::get('bookings/add', [BookingController::class, 'add'])->name('bookings.add');
-      Route::post('bookings/save', [BookingController::class, 'save'])->name('bookings.save');
-      Route::get('bookings/{id}/edit', [BookingController::class, 'getBookingById'])->name('bookings.edit');
-      Route::put('bookings/{id}', [BookingController::class, 'updateBookingById'])->name('bookings.update');
-      Route::delete('bookings/{id}', [BookingController::class, 'delete'])->name('bookings.delete');
-  
     // Webpage Routes
     Route::get('webpage', [WebpageController::class, 'index'])->name('webpage.index');
     Route::get('webpage/add', [WebpageController::class, 'add'])->name('webpage.add');

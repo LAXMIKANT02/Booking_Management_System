@@ -67,6 +67,6 @@ class Authcontroller extends Controller
     public function logout()
     {
        
-        return redirect()->route('webpage.view');
+        return redirect()->route('webpage.landing')->with('success', 'Logged out successfully.');
     }
 }

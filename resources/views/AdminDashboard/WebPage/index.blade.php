@@ -14,7 +14,7 @@
             </thead>
             <tbody>             
                 @php $i =1; @endphp    
-                @foreach($data as $page)     
+                @foreach($pages as $page)     
                 <tr>
                     <th scope="row">{{$i}}</th>
                     <td>{{@$page->name}}</td>
@@ -24,7 +24,7 @@
                         <span class="bi bi-list"></span>
                         <div class="dropdown-content">
                             <a href="{{route('webpage.edit',['id'=>$page->id])}}"><i class="bi bi-pencil-square"></i> Edit</a>                     
-                            <a href="{{route('webpage.view.delete',['id'=>$page->id])}}"><i class="bi bi-trash"></i> Delete</a>
+                            <a href="{{route('webpage.delete',['id'=>$page->id])}}"><i class="bi bi-trash"></i> Delete</a>
                         </div>
                     </div>
                     </td>
